@@ -6,7 +6,7 @@ import { UsersModule } from '../users/users.module';
 import { UserSchema } from '../users/users.schema';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { LocalStrategy } from './local.auth';
+import { LocalStrategy } from './local.strategy';
 
 @Module({
   imports: [

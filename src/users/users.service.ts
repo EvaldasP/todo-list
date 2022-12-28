@@ -4,6 +4,12 @@ import { Model } from 'mongoose';
 import { User, UserDocument } from './users.schema';
 import * as bcrypt from 'bcrypt';
 
+export interface UserView {
+  _id: string;
+  username: string;
+  password: string;
+}
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -18,7 +24,7 @@ export class UsersService {
       password: hashedPassword,
     });
   }
-  async getUser(query: object): Promise<User> {
+  async getUser(query: object): Promise<UserView> {
     return this.userModel.findOne(query);
   }
 }
