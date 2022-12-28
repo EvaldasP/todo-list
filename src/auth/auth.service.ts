@@ -17,6 +17,7 @@ export class AuthService {
     const passwordValid = await bcrypt.compare(password, user?.password);
 
     if (user && passwordValid) {
+      //TODO: check why spreading {password,...other} doesn't work properly
       return { username: user.username, _id: user._id };
     }
 
