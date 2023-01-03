@@ -6,19 +6,21 @@ import { UsersModule } from '../users/users.module';
 import { UserSchema } from '../users/users.schema';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { LocalStrategy } from './local.auth';
+import { JwtStrategy } from './jwt.strategy';
+import { LocalStrategy } from './local.strategy';
 
 @Module({
   imports: [
     PassportModule,
     UsersModule,
     JwtModule.register({
+      //TODO: move this to env variable
       secret: 'secretKey',
       signOptions: { expiresIn: '60s' },
     }),
     MongooseModule.forFeature([{ name: 'user', schema: UserSchema }]),
   ],
-  providers: [AuthService, LocalStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}
