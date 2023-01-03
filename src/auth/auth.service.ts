@@ -1,5 +1,5 @@
 import { Injectable, NotAcceptableException } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { UsersService, UserView } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../users/users.schema';
@@ -11,8 +11,11 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(username: string, password: string): Promise<any> {
-    const user = await this.usersService.getUser({ username });
+  async validateUser(
+    username: string,
+    password: string,
+  ): Promise<Pick<UserView, '_id' | 'username'>> {
+    const user = await this.usersService.getUserByUsername(username);
 
     const passwordValid = await bcrypt.compare(password, user?.password);
 
@@ -24,10 +27,8 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any) {
+  async login(user: UserView): Promise<{ access_token: string }> {
     const payload = { username: user.username, sub: user._id };
-
-    console.log(payload);
 
     return {
       access_token: this.jwtService.sign(payload),
