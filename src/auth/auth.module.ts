@@ -13,10 +13,13 @@ import { LocalStrategy } from './local.strategy';
   imports: [
     PassportModule,
     UsersModule,
-    JwtModule.register({
-      //TODO: move this to env variable
-      secret: 'secretKey',
-      signOptions: { expiresIn: '60s' },
+    JwtModule.registerAsync({
+      useFactory: () => {
+        return {
+          secret: process.env.JWT_SECRET,
+          signOptions: { expiresIn: '60s' },
+        };
+      },
     }),
     MongooseModule.forFeature([{ name: 'user', schema: UserSchema }]),
   ],
