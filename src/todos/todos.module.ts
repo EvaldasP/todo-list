@@ -5,7 +5,6 @@ import { AddTodoHandler } from './commands/addTodo.command';
 import { DeleteTodoHandler } from './commands/deleteTodo.command';
 import { Todo, TodoSchema } from './todo.schema';
 import { TodosController } from './todos.controller';
-import { TodosService } from './todos.service';
 
 const commandHandlers = [AddTodoHandler, DeleteTodoHandler];
 
@@ -14,7 +13,7 @@ const commandHandlers = [AddTodoHandler, DeleteTodoHandler];
     MongooseModule.forFeature([{ name: Todo.name, schema: TodoSchema }]),
     CqrsModule,
   ],
-  providers: [...commandHandlers, TodosService],
+  providers: [...commandHandlers],
   controllers: [TodosController],
 })
 export class TodosModule {}

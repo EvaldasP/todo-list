@@ -1,7 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { TodoDocument } from '../todo.schema';
-import { TodosService } from '../todos.service';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Todo, TodoDocument } from '../todo.schema';
 
 export class DeleteTodoCommand {
   constructor(public _id: string) {}
@@ -9,10 +10,14 @@ export class DeleteTodoCommand {
 
 @CommandHandler(DeleteTodoCommand)
 export class DeleteTodoHandler implements ICommandHandler<DeleteTodoCommand> {
-  constructor(private readonly _todosService: TodosService) {}
+  constructor(
+    @InjectModel(Todo.name) private readonly todoModel: Model<TodoDocument>,
+  ) {}
 
   async execute(command: DeleteTodoCommand): Promise<TodoDocument> {
-    const deletedTodo = await this._todosService.deleteTodo(command._id);
+    const deletedTodo = await this.todoModel.findOneAndDelete({
+      _id: command._id,
+    });
 
     if (!deletedTodo) {
       throw new NotFoundException('Failed to delete todo');
