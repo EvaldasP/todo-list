@@ -27,7 +27,9 @@ export class AuthService {
     return null;
   }
 
-  async login(user: UserDocument): Promise<{ access_token: string }> {
+  login(user: Pick<UserDocument, '_id' | 'username'>): {
+    access_token: string;
+  } {
     const payload = { username: user.username, sub: user._id };
 
     return {
