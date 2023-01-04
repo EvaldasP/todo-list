@@ -8,7 +8,6 @@ import { CreateUserDTO } from './dto/create-user.dto';
 export interface UserView {
   _id: string;
   username: string;
-  password: string;
 }
 
 @Injectable()
@@ -16,7 +15,7 @@ export class UsersService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
   ) {}
-  async createUser(createUserDTO: CreateUserDTO): Promise<User> {
+  async createUser(createUserDTO: CreateUserDTO): Promise<UserDocument> {
     const { username, password } = createUserDTO;
 
     const saltOrRounds = 10;
@@ -27,7 +26,7 @@ export class UsersService {
       password: hashedPassword,
     });
   }
-  async getUserByUsername(username: string): Promise<UserView> {
+  async getUserByUsername(username: string): Promise<UserDocument> {
     return this.userModel.findOne({ username });
   }
 }
