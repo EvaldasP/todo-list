@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Query, QueryWithHelpers } from 'mongoose';
 import { createTodoDTO } from './dto/create-todo.dto';
 import { Todo, TodoDocument } from './todo.schema';
 
@@ -10,7 +10,11 @@ export class TodosService {
     @InjectModel(Todo.name) private readonly todoModel: Model<TodoDocument>,
   ) {}
 
-  public createTodo(createTodoDTO: createTodoDTO): Promise<TodoDocument> {
-    return this.todoModel.create(createTodoDTO);
+  public async createTodo(createTodoDTO: createTodoDTO): Promise<TodoDocument> {
+    return await this.todoModel.create(createTodoDTO);
+  }
+
+  public async deleteTodo(_id: string): Promise<TodoDocument> {
+    return await this.todoModel.findOneAndDelete({ _id });
   }
 }
