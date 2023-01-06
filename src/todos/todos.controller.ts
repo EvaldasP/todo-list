@@ -10,7 +10,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AddTodoCommand } from './commands/addTodo.command';
 import { DeleteTodoCommand } from './commands/deleteTodo.command';
-import { createTodoDTO } from './dto/create-todo.dto';
+import { CreateTodoDTO } from './dto/create-todo.dto';
 import { TodoDocument } from './todo.schema';
 
 @UseGuards(JwtAuthGuard)
@@ -19,7 +19,7 @@ export class TodosController {
   constructor(private readonly commandBus: CommandBus) {}
 
   @Post('/add-todo')
-  async addTodo(@Body() createTodoDTO: createTodoDTO): Promise<TodoDocument> {
+  async addTodo(@Body() createTodoDTO: CreateTodoDTO): Promise<TodoDocument> {
     return this.commandBus.execute(new AddTodoCommand(createTodoDTO));
   }
 
