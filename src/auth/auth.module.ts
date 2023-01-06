@@ -17,7 +17,7 @@ import { LocalStrategy } from './local.strategy';
       useFactory: () => {
         return {
           secret: process.env.JWT_SECRET,
-          signOptions: { expiresIn: '60s' },
+          signOptions: { expiresIn: '3600s' },
         };
       },
     }),
