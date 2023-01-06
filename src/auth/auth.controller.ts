@@ -1,14 +1,15 @@
 import { Controller, Request, Post, UseGuards } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { QueryBus } from '@nestjs/cqrs';
 import { LocalAuthGuard } from './local-auth.guard';
+import { LoginQuery } from './queries/login.query';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private queryBus: QueryBus) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  login(@Request() req): { access_token: string } {
-    return this.authService.login(req.user);
+  login(@Request() req): Promise<{ access_token: string }> {
+    return this.queryBus.execute(new LoginQuery(req.user));
   }
 }

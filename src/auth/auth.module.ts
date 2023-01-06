@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { CqrsModule } from '@nestjs/cqrs';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
@@ -8,11 +9,15 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
+import { LoginQueryHandler } from './queries/login.query';
+
+const queryHandlers = [LoginQueryHandler];
 
 @Module({
   imports: [
     PassportModule,
     UsersModule,
+    CqrsModule,
     JwtModule.registerAsync({
       useFactory: () => {
         return {
@@ -23,7 +28,7 @@ import { LocalStrategy } from './local.strategy';
     }),
     MongooseModule.forFeature([{ name: 'user', schema: UserSchema }]),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, ...queryHandlers],
   controllers: [AuthController],
 })
 export class AuthModule {}

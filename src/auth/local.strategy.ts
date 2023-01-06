@@ -14,9 +14,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     username: string,
     password: string,
   ): Promise<Pick<UserDocument, '_id' | 'username'>> {
-    const user = await this.authService.validateUser(username, password);
+    const user = await this.authService.validateUser({ username, password });
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Wrong username or password');
     }
 
     return user;
