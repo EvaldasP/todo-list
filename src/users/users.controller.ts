@@ -1,16 +1,17 @@
-import { Body, Controller, Post, Get, Param } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { User, UserDocument } from './users.schema';
+import { Body, Controller, Post } from '@nestjs/common';
+import { UserDocument } from './users.schema';
 import { CreateUserDTO } from './dto/create-user.dto';
+import { CommandBus } from '@nestjs/cqrs';
+import { AddUserCommand } from './commands/addUser.command';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly commandBus: CommandBus) {}
 
   @Post('/signup')
   async createUser(
     @Body() createUserDTO: CreateUserDTO,
   ): Promise<UserDocument> {
-    return await this.usersService.createUser(createUserDTO);
+    return this.commandBus.execute(new AddUserCommand(createUserDTO));
   }
 }
